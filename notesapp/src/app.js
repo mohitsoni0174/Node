@@ -1,31 +1,18 @@
 const express = require("express");
-
+const connectDB = require("./config/db.js");
+const notesModel = require("./models/notes.model.js");
 const app = express();
+const createNotesController = require("./controllers/notes.controller.js");
+const notesRoutes = require("./routes/notes.routes.js");
 
 app.use(express.json());
+
+connectDB();
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Notes App!");
 });
 
-app.post("/create", (req, res) => {
-  try {
-    let { title, description } = req.body;
-
-    let newNote = new notesModel.create({
-      title,
-      description,
-    });
-    return res.status(201).json({
-      message: "Note created successfully",
-      note: newNote,
-    });
-  } catch (error) {
-    console.log("error in creating note", error);
-    res.status(500).json({
-      message: "Error creating note",
-    });
-  }
-});
+app.use("/notes", notesRoutes);
 
 module.exports = app;

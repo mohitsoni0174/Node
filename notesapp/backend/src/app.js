@@ -1,11 +1,16 @@
 const express = require("express");
+const cors = require("cors");
 const connectDB = require("./config/db.js");
-const notesModel = require("./models/notes.model.js");
 const app = express();
-const createNotesController = require("./controllers/notes.controller.js");
 const notesRoutes = require("./routes/notes.routes.js");
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 
 connectDB();
 

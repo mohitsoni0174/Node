@@ -79,12 +79,28 @@ const updateNoteController = async (req, res) => {
 const deleteNoteController = async (req, res) => {
   try {
     let noteId = req.params.id;
-   await notesModel.findByIdAndDelete(noteId);
-    return res.status(200)
-      .json({ message: "Note deleted successfully" });
+    await notesModel.findByIdAndDelete(noteId);
+    return res.status(200).json({ message: "Note deleted successfully" });
   } catch (error) {
     console.log("error in deleting note", error);
     res.status(500).json({ message: "Error deleting note" });
+  }
+};
+
+const singleNoteUpdateController = async (req, res) => {
+  try {
+    let noteId = req.params.id;
+    let body = req.body;
+
+    let updatedNote = await notesModel.findByIdAndUpdate(noteId, body, {
+      new: true,
+    });
+    res
+      .status(200)
+      .json({ message: "Note updated successfully", data: updatedNote });
+  } catch (error) {
+    console.log("error in updating note", error);
+    res.status(500).json({ message: "Error updating note" });
   }
 };
 
@@ -94,4 +110,5 @@ module.exports = {
   getSingleNoteController,
   updateNoteController,
   deleteNoteController,
+  singleNoteUpdateController,
 };

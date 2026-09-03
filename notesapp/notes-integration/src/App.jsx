@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import axios from "axios";
+import NoteCard from "./components/NoteCard";
 
 const App = () => {
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
   });
+  const [allNotes, setAllNotes] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,18 @@ const App = () => {
       description: "",
     });
   };
+
+  let getAllNotes = async () => {
+    try {
+      let res = await axios.get("http://localhost:3000/notes/allnotes");
+      setAllNotes(res.data.data);
+    } catch (error) {
+      console.log("Error fetching all notes:", error);
+    }
+  };
+  useEffect(() => {
+    getAllNotes();
+  }, []);
 
   return (
     <div className="min-h-screen p-5 flex flex-col gap-5">
@@ -67,6 +81,12 @@ const App = () => {
           Add Note
         </button>
       </form>
+
+      <div>
+        {allNotes.map((val) => (
+          <NoteCard key={val._id} note={val} />
+        ))}
+      </div>
     </div>
   );
 };
